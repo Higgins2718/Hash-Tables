@@ -15,7 +15,7 @@ class HashTable:
     def __init__(self, capacity):
         self.capacity = capacity  # Number of buckets in the hash table
         self.storage = [None] * capacity
-
+        self.count = 0
 
     def _hash(self, key):
         '''
@@ -32,7 +32,16 @@ class HashTable:
 
         OPTIONAL STRETCH: Research and implement DJB2
         '''
-        pass
+        '''
+           DJB2 hash
+           '''
+        # Start from an arbitrary large prime
+        hash_value = 5381
+        # Bit-shift and sum value for each character
+        for char in key:
+            hash_value = ((hash_value << 5) + hash_value) + char
+        return hash_value
+
 
 
     def _hash_mod(self, key):
@@ -51,7 +60,16 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+
+
+        # Insert our value
+        #item = self.storage[key]
+        #item.value = value
+        self.next = LinkedPair(key, value)
+
+
+        # Increment count
+        self.count += 1
 
 
 
@@ -63,7 +81,11 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        # Remove our value
+        self.storage[key] = None
+
+        # Increment count
+        self.count -= 1
 
 
     def retrieve(self, key):
@@ -74,7 +96,7 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        return self.storage[key]
 
 
     def resize(self):
@@ -84,7 +106,14 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        # Double storage size
+        self.capacity *= 2
+        new_storage = [None] * self.capacity
+        # Copy old items to new storage
+        for i in range(len(self.storage)):
+            new_storage[i] = self.storage[i]
+        # Point storage to the new storage
+        self.storage = new_storage
 
 
 
@@ -107,7 +136,7 @@ if __name__ == "__main__":
     ht.resize()
     new_capacity = len(ht.storage)
 
-    print(f"\nResized from {old_capacity} to {new_capacity}.\n")
+    print("\nResized from {} to {}.\n").format(old_capacity, new_capacity)
 
     # Test if data intact after resizing
     print(ht.retrieve("line_1"))
